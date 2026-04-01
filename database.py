@@ -1,15 +1,18 @@
 # SQLite Database creation and configuration
+
 import sqlite3
 
 # Constant with database archive name
 # Archive will be created
-db_order = 'orders.bd'
+db_order = 'orders.db'
+
+# ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 def get_connection():
 
-    # Creates and returns a connection to the SQLite database.
+    # Creates and returns a connection to the SQLite database
 
-    # The row_factory property allows accessing columns by name.
+    # The row_factory property allows accessing columns by name
     # (Ex.: Order['product'] index preferred (Ex.: order[1]))
 
     # Returns:
@@ -19,17 +22,19 @@ def get_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+# ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 def init_db():
     
-    # Inicializates the database creating 'orders' table if it doesn't yet exists. 
-    # Press to call it multiple times.
+    # Inicializates the database creating 'orders' table if it doesn't yet exists
+    # Press to call it multiple times
     
     conn = get_connection()
     
-    # cursor() - Allows to execute SQL commands.
+    # cursor() - Allows to execute SQL commands
     cursor = conn.cursor()
     
-    #IF NOT EXIST - Ensures that the command does not fail if the table already exists.
+    #IF NOT EXIST - Ensures that the command does not fail if the table already exists
     cursor.execute('''
                    CREATE TABLE IF NOT EXISTS orders(
                        id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,12 +44,14 @@ def init_db():
                        created_at    TEXT      DEFAULT(datetime('now', 'localtime'))
                        )
                        ''')
-    # Saves changes in .bd archive.
+    # Saves changes in .db archive
     conn.commit()
     
     # Liberates the connection (best practice)
     conn.close()
     
     print("Database inicialized with success!")
+
+# ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 init_db()
