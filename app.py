@@ -91,7 +91,7 @@ def order_create():
         return jsonify({'error': 'The request body is missing or invalid.'}), 400
     
     # Required field check
-    product = data.get('produto', '').strip()
+    product = data.get('product', '').strip()
     if not product:
         return jsonify({'error': '"Product" field is required and it cant be null'})
     
