@@ -14,7 +14,7 @@ CORS(app)
 @app.route('/')
 def index():
     """
-    Feed the index.html file from the static folder
+    Feed the index.html file from the static folder.
     """
     return app.send_static_file('index.html')
 
@@ -22,8 +22,8 @@ def index():
 @app.route('/status')
 def status():
     """
-    API verification route (health)
-    Returns a json informing that the server is active
+    API verification route (health).
+    Returns a json informing that the server is active.
     """
     return jsonify({
         "status": "online",
@@ -36,10 +36,10 @@ def status():
 @app.route('/orders', methods=['GET'])
 def list_orders():
     """
-    List all the registered production orders
-    Method HTTP: GET
-    URL: http://localhost:5000/orders
-    Returns: List and orders in JSON format
+    List all the registered production orders.
+    Method HTTP: GET.
+    URL: http://localhost:5000/orders.
+    Returns: List and orders in JSON format.
     """
     
     conn = get_connection()
@@ -55,13 +55,13 @@ def list_orders():
 @app.route('/orders/<int:order_id>', methods=['GET'])
 def search_order(order_id):
     """
-    Retrieves a single production order by ID
+    Retrieves a single production order by ID.
     
     URL Parameters:
-        order id(int): Order ID to be fetched
+        order id(int): Order ID to be fetched.
     Returns:
-        200 + order's JSON, of the order is found
-        400 + error message, if it doesn't exists
+        200 + order's JSON, of the order is found.
+        400 + error message, if it doesn't exists.
     """
     conn = get_connection()
     cursor = conn.cursor()
@@ -78,22 +78,22 @@ def search_order(order_id):
 @app.route('/orders', methods=['POST'])
 def order_create():
     """
-    Create a new production order from sent JSON data
+    Creates a new production order from sent JSON data.
     
     Expected body (JSON):
 
-        product     (str) : Product name    - Required
-        quantity    (int) : Part quantity   - Required, > 0
-        status      (str) : Optional        - Standard : "Pending"
+        product     (str) : Product name    - Required.
+        quantity    (int) : Part quantity   - Required, > 0.
+        status      (str) : Optional        - Standard : "Pending".
         
         Returns:
-            201 : Order's JSON created, in sucessfull case
-            400 : Error message, if data is invalid
+            201 : Order's JSON created, in sucessfull case.
+            400 : Error message, if data is invalid.
     """
     data = request.get_json()
     
     if not data:
-        return jsonify({'error': 'The request body is missing or invalid.'}), 400
+        return jsonify({'error': 'The request body is missing or invalid'}), 400
     
     # Required field check
     product = data.get('product', '').strip()
@@ -145,29 +145,29 @@ def update_order(order_id):
     Updates the status of an existing production order.
     
     URL Parameters:
-        order_id (int) : ID of the order to update
+        order_id (int) : ID of the order to update.
         
     Expected body (JSON):
         status (str) : New status. Accepted values:
                        'Pending', 'In progress', 'Completed'.
                        
     Returns:
-        200 : JSON of the updated order
-        400 : Error message if the status is invalid
-        404 : Error message if the order was not found
+        200 : JSON of the updated order.
+        400 : Error message if the status is invalid.
+        404 : Error message if the order was not found.
     """
     
     data = request.get_json()
     
     if not data:
-        return jsonify({'error': 'Invalid or missing requisit body.'}), 400
+        return jsonify({'error': 'Invalid or missing requisit body'}), 400
     
     # Status field validation
     valid_status = ['Pending', 'In progress', 'Completed']
     new_status = data.get('status', '').strip()
     
     if not new_status:
-        return jsonify({'error': '"Status" field is required.'}), 400
+        return jsonify({'error': '"Status" field is required'}), 400
     
     if new_status not in valid_status:
         return jsonify({'error' : f'Invalid status! Please use the allowed values: {valid_status}'}), 400
@@ -194,6 +194,40 @@ def update_order(order_id):
     
     return jsonify(dict(updated_order)), 200
 
+# 7th Route - Order remove (DELETE) ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+@app.route('/orders/<int:order_id>', methods=['DELETE'])
+def remove_order(order_id):
+    """
+    Permanently removes a production order by its ID.
+
+    URL Parameters:
+        order_id (int) : ID of the order to be removed.
+    
+    Returns:
+        200 : Confirmation message.
+        404 : Error message if the order is not found.
+    """
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    # Verify existence before deletion
+    cursor.execute('SELECT id, product FROM orders WHERE id = ?', (order_id,))
+    order = cursor.fetchone()
+    
+    if order is None:
+        conn.close()
+        return jsonify({'error' : f'Number order {order_id} not found'}), 404
+    
+    # Stores the deleted product's name for the confirmation message
+    removed_product_name = order['product']
+    
+    # Operation execution
+    cursor.execute('DELETE FROM orders WHERE id = ?', (order_id,))
+    conn.commit()
+    conn.close()
+
+    return jsonify({'message' : f'Order {order_id} removed with success!', 'removed_id' : order_id}), 200 
+   
 # Entry point ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 if __name__=='__main__':
     init_db()
