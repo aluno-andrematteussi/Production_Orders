@@ -1,8 +1,14 @@
+# ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+# app.py - Production Orders System - COMPLETE C.R.U.D
+# SENAI JARAGUÁ DO SUL - TECHNICAL COURSE IN CYBERSYSTEMS FOR AUTOMATION - 2026/1
+# ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 # Flask Back-end: REST API routes
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from database import init_db, get_connection
+from datetime import datetime
 
 # Creates a Flash aplication instance
 app = Flask(__name__, static_folder='static', static_url_path='')
@@ -25,10 +31,18 @@ def status():
     API verification route (health).
     Returns a json informing that the server is active.
     """
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT COUNT(*) AS total FROM orders')
+    result = cursor.fetchone()
+    conn.close()
+    
     return jsonify({
         "status": "online",
         "system": "Production Order System",
-        "version": "1.0.0",
+        "version": "2.0.0",
+        "total_orders": result["total"],
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "message": "Hello, Factory, API is working!"
     })
     
@@ -138,6 +152,7 @@ def order_create():
     conn.close()
     # 201 - Returns "created" with full register
     return jsonify(dict(new_order)), 201
+
 # 6th Route - Update the status of a production order (PUT) ─────────────────────────────────────────────────────────────────────────────────────────
 @app.route('/orders/<int:order_id>', methods=['PUT'])
 def update_order(order_id):
