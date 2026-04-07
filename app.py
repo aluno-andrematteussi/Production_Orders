@@ -39,7 +39,7 @@ def status():
     
     return jsonify({
         "status": "online",
-        "system": "Production Order System",
+        "system": "Production Orders System",
         "version": "2.0.0",
         "total_orders": result["total"],
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
