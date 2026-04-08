@@ -242,6 +242,65 @@ def remove_order(order_id):
     conn.close()
 
     return jsonify({'message' : f'Order {order_id} removed with success!', 'removed_id' : order_id}), 200 
+
+# 8th Route - Edit product information (PUT) ────────────────────────────────────────────────────────────────────────────────────────────────────────
+@app.route('/orders/<int:order_id>/info', methods=['PUT'])
+def edit_order(order_id):
+    """
+    Updates the product name and quantity of an existing production order.
+    
+    URL Parameters:
+        order_id (int) : ID of the order to be updated.
+        
+    Expected body (JSON):
+        product (str) : New product name.
+        quantity (int): New quantity.
+    """
+    data = request.get_json()
+    
+    if not data:
+        return jsonify({'error': 'Missing or invalid request body.'}), 400
+    
+    product = data.get('product', '').strip()
+    
+    if not product:
+        return jsonify({'error': '"Product" field is required and cannot be empty.'}), 400
+    
+    # Quantity validation
+    try:
+        quantity = data.get('quantity')
+        if quantity is None:
+            return jsonify({'error': '"Quantity" field is required.'}), 400
+            
+        quantity = int(quantity)
+        if quantity <= 0:
+            return jsonify({'error': 'Quantity must be greater than zero.'}), 400
+            
+    except (ValueError, TypeError):
+        return jsonify({'error': '"Quantity" field must be a valid number.'}), 400
+
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    # Check if the order exists before updating
+    cursor.execute('SELECT id FROM orders WHERE id = ?', (order_id,))
+    if cursor.fetchone() is None:
+        conn.close()
+        return jsonify({'error': f'Order {order_id} not found.'}), 404
+    
+    # Execute the update
+    cursor.execute(
+        'UPDATE orders SET product = ?, quantity = ? WHERE id = ?', 
+        (product, quantity, order_id)
+    )
+    conn.commit()
+    
+    # Fetch the updated record to return it
+    cursor.execute('SELECT * FROM orders WHERE id = ?', (order_id,))
+    updated_order = cursor.fetchone()
+    conn.close()
+    
+    return jsonify(dict(updated_order)), 200
    
 # Entry point ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 if __name__=='__main__':

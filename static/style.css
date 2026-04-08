@@ -1,0 +1,202 @@
+/* — Reset e base — */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(160deg, #1A1A1A, #2B2B2B);
+  color: #ECEFF1;
+  min-height: 100vh;
+  backdrop-filter: blur(3px);
+}
+
+/* — Header — */
+header {
+  background: rgba(40, 45, 50, 0.85);
+  color: #ECEFF1;
+  padding: 1.2rem 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.header-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #F5F5F5;
+}
+
+/* — API Status Badge — */
+#status-badge {
+  font-size: 0.85rem;
+  padding: 4px 14px;
+  border-radius: 20px;
+  background: rgba(200,200,200,0.15);
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(6px);
+}
+
+#status-badge.online { background: rgba(0,151,123,0.25); border-color: #00897B; }
+#status-badge.offline { background: rgba(183,28,28,0.25); border-color: #B71C1C; }
+
+/* — Main Layout — */
+main {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+/* — Cards — */
+.card {
+  background: rgba(50, 55, 60, 0.75);
+  border-radius: 12px;
+  padding: 1.8rem;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover { 
+  transform: translateY(-2px); 
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+
+.card h2 {
+  font-size: 1.2rem;
+  color: #80CBC4;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(128,203,196,0.3);
+}
+
+/* — Form — */
+.form-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
+
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+label { font-size: 0.85rem; font-weight: 600; color: #B0BEC5; }
+input, select {
+  padding: 0.55rem 0.8rem;
+  border: 1px solid rgba(200,200,200,0.3);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background: rgba(255,255,255,0.05);
+  color: #ECEFF1;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s, background 0.2s;
+  outline: none;
+}
+
+input:focus, select:focus { border-color: #80CBC4; background: rgba(255,255,255,0.1); }
+
+/* — Buttons — */
+button {
+  padding: 0.6rem 1.4rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+button:hover { opacity: 0.9; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+button:active { transform: scale(0.97); }
+
+#btn-register { background: #00897B; color: #ECEFF1; }
+.btn-update { background: rgba(128,203,196,0.2); color: #80CBC4; font-size:0.85rem; }
+.btn-edit { background: rgba(255,179,0,0.15); color: #FFC107; font-size:0.8rem; padding:4px 10px; margin-right: 4px; }
+.btn-delete { background: rgba(244,67,54,0.15); color: #F44336; font-size:0.8rem; padding:4px 10px; }
+
+/* — Feedback message — */
+.message {
+  margin-top: 0.8rem;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.message.success { background: rgba(76,175,80,0.2); color:#2E7D32; border-left:4px solid #2E7D32; }
+.message.error { background: rgba(244,67,54,0.2); color:#C62828; border-left:4px solid #C62828; }
+.hidden { display: none; }
+
+/* — Table — */
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.table-container { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+
+th {
+  background: rgba(38,50,56,0.85);
+  color: #ECEFF1;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  backdrop-filter: blur(6px);
+}
+
+td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+tr:hover td { background: rgba(255,255,255,0.05); }
+
+/* — Status badges — */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.badge-pending { background: rgba(255,255,196,0.2); color:#F57F17; }
+.badge-in-progress { background: rgba(227,242,253,0.2); color:#0D47A1; }
+.badge-completed { background: rgba(232,245,233,0.2); color:#2E7D32; }
+
+/* — Table status select — */
+.select-status {
+  padding: 3px 6px;
+  border: 1px solid rgba(200,200,200,0.3);
+  border-radius: 4px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  margin-right: 6px;
+  background: rgba(255,255,255,0.05);
+  color: #ECEFF1;
+  backdrop-filter: blur(6px);
+}
+
+/* — Loading / No data — */
+#loading, #no-data {
+  text-align: center;
+  padding: 1.5rem;
+  font-weight: 600;
+  color: #80CBC4;
+}
+#no-data { color: #B0BEC5; }
+
+/* — Scrollbar (frosted) — */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(128,203,196,0.3); border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(128,203,196,0.5); }
